@@ -6,7 +6,7 @@
 - Attributions des identifiants
 - Développement des métadonnées (y compris l'ensemble des métadonnées DC pour les oeuvres)
 
-Référent : Vincent Jolivet, @editions
+Référent : @architexte
 
 - Difficulté : 8/10
 - Répétitivité : 7/10
