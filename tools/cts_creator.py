@@ -115,6 +115,81 @@ def valider_work(liste_resultat):
     	valide = input("Valider ? [o/n]")
     return valide
 
+def create_cts_textgrp(liste_information):
+	'''
+	Crée à partir d'une liste de résultats un fichier __cts__.xml niveau textgroup
+	:type liste_information: list
+
+	'''
+	# importe le module etree de la library lxml désigné par ET pour simplifier (utilisation courante)
+	import lxml.etree as ET
+	urn_calcul = 'urn:cts:' + ':' + liste_information[4] + ':' + liste_information[1]
+
+	#définit l'élément racine du fichier
+	root = ET.Element("textgroup")
+	#ajoute des attributs à l'élément racine textgroup
+	root.attrib['xmlns'] = 'http://chs.harvard.edu/xmlns/cts'
+	root.attrib['urn'] = urn_calcul
+
+	groupname = ET.SubElement(root,"groupname")
+	# groupname.set("xml:lang","mul") et groupname.attrib['xml:lang'] = 'langue' ne fonctionnait pas 
+	#la solution a été trouvée sur http://bendustries.org/wp/?p=21
+	attr = groupname.attrib
+	attr['{http://www.w3.org/XML/1998/namespace}lang'] = liste_information[2]
+	groupname.text = liste_information[3]
+	tree = ET.ElementTree(root)
+	# pretty_print permet l'indentation correcte des fichiers xml
+	tree.write(liste_information[0], pretty_print = True)
+
+	return 
+
+def create_cts_work (liste_information):
+	'''
+	Crée à partir d'une liste de résultats un fichier __cts__.xml niveau work
+	:type liste_information: list
+
+	'''
+
+	import lxml.etree as ET
+	urn_group = 'urn:cts:'+ liste_information[11] + liste_information[1]
+	urn_work = urn_group + '.' + liste_information[3]
+	urn_edition = liste_information[11] + ":" + liste_information[1] + ":" + liste_information[2] + ":" + liste_information[7]
+
+	root = ET.Element("work")
+	root.attrib['xmlns'] = 'http://chs.harvard.edu/xmlns/cts'
+	root.attrib['groupUrn'] = urn_group
+	root.attrib['urn'] = urn_work
+	attr_lang_work = root.attrib
+	attr_lang_work['{http://www.w3.org/XML/1998/namespace}lang'] = liste_information[10]
+#	root.attrib['xmlns:cpt'] = 'http://purl.org/capitains/ns/1.0#' cette ligne pose le même problème que xml:lang
+#	root.attribt['xmlns:dc'] = 'http://purl.org/dc/elements/1.1/'
+
+	title = ET.SubElement(root, "title")
+	attr_lang_title = title.attrib
+	attr_lang_title['{http://www.w3.org/XML/1998/namespace}lang'] = liste_information[3]
+	title.text = liste_information[4]
+
+	edition = ET.SubElement(root, "edition")
+	edition.attrib['workUrn'] = urn_edition
+	edition.attrib['urn'] = ""
+	attr_lang_edition = edition.attrib
+	attr_lang_edition['{http://www.w3.org/XML/1998/namespace}lang'] = liste_information[6]
+	edition.text = liste_information[5]
+
+	label = ET.SubElement(edition, "label")
+	attr = label.attrib
+	attr['{http://www.w3.org/XML/1998/namespace}lang'] = 'langue_label'
+
+	description = ET.SubElement(edition, "description")
+	attr = description.attrib
+	attr['{http://www.w3.org/XML/1998/namespace}lang'] = liste_information[9]
+
+	tree = ET.ElementTree(root)
+
+	tree.write(liste_information[0], pretty_print = True)
+
+	return
+
 # Fin Déclaration des fonctions
 
 ############################################################
@@ -134,7 +209,8 @@ if choix_branche == "textgroup" :
         information = formulaire_textgrp()
         valide = valider_textgrp(information)
     try:
-        create(information[0])
+        information.append(CODE_NAMESPACE)
+        create_cts_textgrp(information)
         print("Félicitation, vous avez créé un fichier __cts__.xml, avec plein de trucs dedans !")
     except FileNotFoundError:
         print("Création du fichier interrompue : erreur dans le calcul du chemin. \nVeuillez relancer le programme sans faire d'erreur")
@@ -145,7 +221,8 @@ elif choix_branche == "work" :
         information = formulaire_work()
         valide = valider_work(information)
     try:
-        create(information[0])
-        print("Félicitation, vous avez créé un fichier __cts__.xml, avec plein de trucs dedans !")
+    	information.append(CODE_NAMESPACE)
+    	create_cts_work(information)
+    	print("Félicitation, vous avez créé un fichier __cts__.xml, avec plein de trucs dedans !")
     except FileNotFoundError:
-        print("Création du fichier interrompue : erreur dans le calcul du chemin. \nVeuillez relancer le programme sans faire d'erreur")
+    	print("Création du fichier interrompue : erreur dans le calcul du chemin. \nVeuillez relancer le programme sans faire d'erreur")
