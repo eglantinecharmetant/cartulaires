@@ -115,31 +115,6 @@ def valider_work(liste_resultat):
     	valide = input("Valider ? [o/n]")
     return valide
 
-def create_cts_textgrp(liste_information):
-    #liste_information = [chemin, code_textgrp, lang_nom_textgrp, nom_textgrp, CODE_NAMESPACE]
-
-    urn_calcul = 'urn:cts:' + ':' + liste_information[4] + ':' + liste_information[1]
-    # importe le module etree de la library lxml désigné par ET pour simplifier (utilisation courante)
-    import lxml.etree as ET
-    #définit l'élément racine du fichier
-    root = ET.Element("textgroup")
-    #ajoute des attributs à l'élément racine textgroup
-    root.attrib['xmlns'] = 'http://chs.harvard.edu/xmlns/cts'
-    root.attrib['urn'] = urn_calcul
-
-    groupname = ET.SubElement(root,"groupname")
-    # groupname.set("xml:lang","mul") et groupname.attrib['xml:lang'] = 'langue' ne fonctionnait pas 
-    #la solution a été trouvée sur http://bendustries.org/wp/?p=21
-    attr = groupname.attrib
-    attr['{http://www.w3.org/XML/1998/namespace}lang'] = liste_information[2]
-    groupname.text = liste_information[3]
-    tree = ET.ElementTree(root)
-    # pretty_print permet l'indentation correcte des fichiers xml
-    # Attention au chemin de fichier !!!
-    tree.write(liste_information[0], pretty_print = True)
-
-    return 
-
 # Fin Déclaration des fonctions
 
 ############################################################
@@ -159,8 +134,7 @@ if choix_branche == "textgroup" :
         information = formulaire_textgrp()
         valide = valider_textgrp(information)
     try:
-        information.append(CODE_NAMESPACE)
-        create_cts_textgrp(information)
+        create(information[0])
         print("Félicitation, vous avez créé un fichier __cts__.xml, avec plein de trucs dedans !")
     except FileNotFoundError:
         print("Création du fichier interrompue : erreur dans le calcul du chemin. \nVeuillez relancer le programme sans faire d'erreur")
