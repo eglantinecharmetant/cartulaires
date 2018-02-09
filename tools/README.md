@@ -1,10 +1,11 @@
 # Installation sur Linux (Ubuntu/Debian)
 
 ## Première utilisation  
-Vous aurez sûrement besoin d'installer `python3`, `virtualenv` et `pip`, pour cela, ouvrez un terminal et tapez :  
+Vous aurez sûrement besoin d'installer **python3**, **virtualenv** et **pip**, pour cela, ouvrez un terminal et tapez :  
 `sudo apt-get install python3 libfreetype6-dev python3-pip python3-virtualenv`
 
-Une fois cela instalé, téléchargez le repository `Chartes-TNAH/cartulaires.git`, lancez le dossier `cartulaires/` dans un terminal et tapez :  
+Une fois cela installé, téléchargez le repository **Chartes-TNAH/cartulaires.git**.  
+Lancez le dossier cartulaires/ dans un terminal et tapez :  
 `virtualenv ~/.env-cartulaires -p python3`  
 Cela crée un environnement virtuel dans lequel pourront être installés les packages utilisés. Pour activer cet environnement virtuel, tapez :  
 `source ~/.env-cartulaires/bin/activate`  
@@ -24,4 +25,4 @@ Pour lancer `cts_creator.py`, tapez :
 ## Utilisation(s) ultérieure(s) :
 Lancez le terminal depuis le dossier `cartulaires/` et entrez :  
 `source ~/.env-cartulaires/bin/activate`  
-puis lancez `cts_creator.py` depuis le dossier `tools/`.
+Puis lancez `cts_creator.py` depuis le dossier `tools/`.
